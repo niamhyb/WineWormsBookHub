@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+
 namespace DomainModel
 {
     public class Startup
@@ -24,18 +25,33 @@ namespace DomainModel
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
+        //public void ConfigureServices(IServiceCollection services)
+        //{
+        //    services.AddControllersWithViews();
+        //    //extra code for identities
+        //    services.AddRazorPages();
+        //    //extra line of code
+        //    services.AddDbContext<DomainModelContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DomainModelContext")));
+        //    services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+        //        .AddDefaultUI()
+        //        .AddEntityFrameworkStores<DomainModelContext>()
+        //        .AddDefaultTokenProviders();
+
+        //}
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            //extra code for identities
             services.AddRazorPages();
-            //extra line of code
             services.AddDbContext<DomainModelContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DomainModelContext")));
             services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+            //services.AddDefaultIdentity<ApplicationUser>((options => options.SignIn.RequireConfirmedAccount = true)).AddRoles<IdentityRole>()
                 .AddDefaultUI()
                 .AddEntityFrameworkStores<DomainModelContext>()
                 .AddDefaultTokenProviders();
-
+            //services.AddMvc().AddNewtonsoftJson();
+            //services.AddMvc();
+            //services.Configure<AuthMessageSenderOptions>(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
