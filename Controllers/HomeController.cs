@@ -1,5 +1,6 @@
 ﻿using DomainModel.Data;
 using DomainModel.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
@@ -18,6 +19,7 @@ namespace DomainModel.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly DomainModelContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+
         public HomeController(DomainModelContext context, UserManager<ApplicationUser> userManager, ILogger<HomeController> logger)
         {
             _context = context;
@@ -31,27 +33,32 @@ namespace DomainModel.Controllers
             return View();
         }
 
-        
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> AddBook()
         {
             var userId = _userManager.GetUserId(HttpContext.User);
-            Member person = (Member)await _context.ApplicationUsers.FirstOrDefaultAsync(p => p.Id == userId);
+            ApplicationUser person = await _context.ApplicationUsers.FirstOrDefaultAsync(p => p.Id == userId);
             _context.Database.EnsureCreated();
 
-            Book newbook = new Book() { BookID = 0, Title = "Treasure Island", Author = "R.L. Stevenson", ISBN = "2234567891235", AvgRating = 5, Genres = Genre.Adventure };
+            ApplicationUser bor = await _context.ApplicationUsers.FirstOrDefaultAsync(p => p.Email.Contains("mur"));
+
+            //Book newbook = new Book() { BookID = 0, Title = "Treasure Island", Author = "R.L. Stevenson", ISBN = "2234567891235", AvgRating = 5, Genres = Genre.Adventure };
+            //await _context.BookTable.AddAsync(newbook);
+
+            Book newbook = new Book() { BookID = 0, Title = "Braywatch", Author = "Ross O'Carroll-Kelly", ISBN = "1234567895643", AvgRating = 4, Genres = Genre.Comedy};
             await _context.BookTable.AddAsync(newbook);
 
-            Reservation r = new Reservation() { borrower = person, DateReserved = DateTime.Now, ReadingOrder = 1, reservationID = 0 };
-            await _context.reservations.AddAsync(r);
+            //Reservation r = new Reservation() { borrower = bor, DateReserved = DateTime.Now, ReadingOrder = 1, reservationID = 0 };
+            //await _context.reservations.AddAsync(r);
 
-            Loan l = new Loan() { borrower = person, DateLoaned = DateTime.Now, DateReturned = DateTime.Now, loanID = 0 };
-            await _context.loans.AddAsync(l);
+            //Loan l = new Loan() { borrower = bor, DateLoaned = DateTime.Now, DateReturned = DateTime.Now, loanID = 0 };
+            //await _context.loans.AddAsync(l);
 
             Catalogue cat = new Catalogue();
             cat.book = newbook;
-            cat.Owner = (Member)person;
-            cat.ReserveList.Add(r);
-            cat.LoanList.Add(l);
+            cat.Owner = bor;
+            //cat.ReserveList.Add(r);
+            //cat.LoanList.Add(l);
             await _context.catalogues.AddAsync(cat);
 
             //person.books.Add(
@@ -94,6 +101,7 @@ namespace DomainModel.Controllers
             if (chkUser.Succeeded)
             {
                 var result1 = await _userManager.AddToRoleAsync(adm, "Administrator");
+                var result2 = await _userManager.AddToRoleAsync(adm, "Member");
             }
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

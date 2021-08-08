@@ -23,11 +23,11 @@ namespace DomainModel.Models
 
     public class Administrator : ApplicationUser
     {
-
+        //this is the administrator
     }
 
     public class Member : ApplicationUser
     {
-
+        //all other members
     }
 }

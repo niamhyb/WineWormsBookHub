@@ -32,11 +32,13 @@ namespace DomainModel.Models
 
         //not the book/owner details, a reference to them
         public virtual Book book { get; set; }
-        public virtual Member Owner { get; set; }
+        public virtual ApplicationUser Owner { get; set; }
 
         //list of members who want particular book
         public virtual List<Reservation> ReserveList { get; set; }
         public virtual List<Loan> LoanList { get; set; }
+        //book is inuse or not
+        public bool inUse { get; set; } = true;
 
         public Catalogue()
         {
@@ -53,7 +55,7 @@ namespace DomainModel.Models
         [Key]
         public int reservationID { get; set; }
         //public Book book { get; set; }
-        public virtual Member borrower { get; set; }
+        public virtual ApplicationUser borrower { get; set; }
         public DateTime DateReserved { get; set; }
 
         public int ReadingOrder { get; set; }
@@ -66,7 +68,7 @@ namespace DomainModel.Models
         [Key]
         public int loanID { get; set; }
         //public Book book { get; set; }
-        public virtual Member borrower { get; set; }
+        public virtual ApplicationUser borrower { get; set; }
 
         public DateTime DateLoaned { get; set; }
 

@@ -1,5 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using DomainModel.Data;
+using DomainModel.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,15 +12,36 @@ using System.Threading.Tasks;
 
 namespace DomainModel.Controllers
 {
+   
     public class BookController : Controller
     {
-        // GET: BookController
-        public ActionResult Index()
+        private readonly ILogger<BookController> _logger;
+        private readonly DomainModelContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
+        public BookController(DomainModelContext context, UserManager<ApplicationUser> userManager, ILogger<BookController> logger)
         {
-            return View();
+            _context = context;
+            _userManager = userManager;
+            _logger = logger;
         }
+        // GET: BookController
+        public async Task<ActionResult> Index()
+        {
+            var userId = _userManager.GetUserId(HttpContext.User);
+            ApplicationUser person = await _context.ApplicationUsers.FirstOrDefaultAsync(p => p.Id == userId);
 
-      
+            
+            var myBooks = await _context.catalogues.Where(b => b.Owner == person)
+                .Include(p => p.book)
+                .ToListAsync();
+            List<Book> booklist = new List<Book>();
+            foreach (Catalogue c in myBooks)
+            {
+                booklist.Add(c.book);
+
+            }
+            return View(myBooks);
+        }
 
         // GET: BookController/Details/5
         public ActionResult Details(int id)

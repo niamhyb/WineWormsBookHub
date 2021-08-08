@@ -1,0 +1,54 @@
+﻿@model IEnumerable<DomainModel.Models.Catalogue>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>All Books in Catalogue</h1>
+
+@*<p>
+    <a asp-action="Create">Create New</a>
+</p>*@
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.book.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.book.Author)
+            </th>
+            <th>
+               @Html.Label("Owner")
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.book.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.book.Author)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Owner.FirstName)
+                
+                    @Html.DisplayFor(modelItem => item.Owner.LastName)
+                </td>
+                <td>
+                    @if (item.Owner.Id != ViewBag.thisUser)
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.bID">Reserve</a>
+                    }
+                    @*<a asp-action="Edit" asp-route-id="@item.bID">In Use/Not in Use</a> |*@
+                    @*<a asp-action="Details" asp-route-id="@item.bID">Details</a> |
+        <a asp-action="Delete" asp-route-id="@item.bID">Delete</a>*@
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

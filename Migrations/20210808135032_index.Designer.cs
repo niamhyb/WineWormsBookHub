@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DomainModel.Migrations
 {
     [DbContext(typeof(DomainModelContext))]
-    [Migration("20210807153050_catalogue39")]
-    partial class catalogue39
+    [Migration("20210808135032_index")]
+    partial class index
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -34,10 +34,6 @@ namespace DomainModel.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
@@ -97,8 +93,6 @@ namespace DomainModel.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("ApplicationUser");
                 });
 
             modelBuilder.Entity("DomainModel.Models.Book", b =>
@@ -141,6 +135,9 @@ namespace DomainModel.Migrations
 
                     b.Property<string>("OwnerId")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("inUse")
+                        .HasColumnType("bit");
 
                     b.HasKey("bID");
 
@@ -338,20 +335,13 @@ namespace DomainModel.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("DomainModel.Models.Member", b =>
-                {
-                    b.HasBaseType("DomainModel.Models.ApplicationUser");
-
-                    b.HasDiscriminator().HasValue("Member");
-                });
-
             modelBuilder.Entity("DomainModel.Models.Catalogue", b =>
                 {
                     b.HasOne("DomainModel.Models.Book", "book")
                         .WithMany()
                         .HasForeignKey("BookID");
 
-                    b.HasOne("DomainModel.Models.Member", "Owner")
+                    b.HasOne("DomainModel.Models.ApplicationUser", "Owner")
                         .WithMany()
                         .HasForeignKey("OwnerId");
 
@@ -366,7 +356,7 @@ namespace DomainModel.Migrations
                         .WithMany("LoanList")
                         .HasForeignKey("CataloguebID");
 
-                    b.HasOne("DomainModel.Models.Member", "borrower")
+                    b.HasOne("DomainModel.Models.ApplicationUser", "borrower")
                         .WithMany()
                         .HasForeignKey("borrowerId");
 
@@ -379,7 +369,7 @@ namespace DomainModel.Migrations
                         .WithMany("ReserveList")
                         .HasForeignKey("CataloguebID");
 
-                    b.HasOne("DomainModel.Models.Member", "borrower")
+                    b.HasOne("DomainModel.Models.ApplicationUser", "borrower")
                         .WithMany()
                         .HasForeignKey("borrowerId");
 
