@@ -59,6 +59,7 @@ namespace DomainModel.Models
         public DateTime DateReserved { get; set; }
 
         public int ReadingOrder { get; set; }
+        public Catalogue catalogue { get; set; }
 
     }
 

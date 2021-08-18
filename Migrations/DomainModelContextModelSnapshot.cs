@@ -181,9 +181,6 @@ namespace DomainModel.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("CataloguebID")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("DateReserved")
                         .HasColumnType("datetime2");
 
@@ -193,11 +190,14 @@ namespace DomainModel.Migrations
                     b.Property<string>("borrowerId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int?>("cataloguebID")
+                        .HasColumnType("int");
+
                     b.HasKey("reservationID");
 
-                    b.HasIndex("CataloguebID");
-
                     b.HasIndex("borrowerId");
+
+                    b.HasIndex("cataloguebID");
 
                     b.ToTable("reservations");
                 });
@@ -363,15 +363,17 @@ namespace DomainModel.Migrations
 
             modelBuilder.Entity("DomainModel.Models.Reservation", b =>
                 {
-                    b.HasOne("DomainModel.Models.Catalogue", null)
-                        .WithMany("ReserveList")
-                        .HasForeignKey("CataloguebID");
-
                     b.HasOne("DomainModel.Models.ApplicationUser", "borrower")
                         .WithMany()
                         .HasForeignKey("borrowerId");
 
+                    b.HasOne("DomainModel.Models.Catalogue", "catalogue")
+                        .WithMany("ReserveList")
+                        .HasForeignKey("cataloguebID");
+
                     b.Navigation("borrower");
+
+                    b.Navigation("catalogue");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

@@ -5,6 +5,7 @@
 }
 
 <h1>All Books in Catalogue</h1>
+@*@ViewBag.thisUser*@
 
 @*<p>
     <a asp-action="Create">Create New</a>
@@ -19,36 +20,73 @@
                 @Html.DisplayNameFor(model => model.book.Author)
             </th>
             <th>
-               @Html.Label("Owner")
+                @Html.Label("Owner")
             </th>
+            @*<th>
+                @Html.Label("Reservation Status")
+            </th>*@
             <th></th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.book.Title)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.book.Author)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Owner.FirstName)
-                
-                    @Html.DisplayFor(modelItem => item.Owner.LastName)
-                </td>
-                <td>
-                    @if (item.Owner.Id != ViewBag.thisUser)
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.book.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.book.Author)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Owner.FirstName)
+
+                @Html.DisplayFor(modelItem => item.Owner.LastName)
+            </td>
+            @*<td>
+                @Html.DisplayFor(modelItem => item.inUse)
+            </td>*@
+            <td>
+                @if (item.Owner.Id != ViewBag.thisUser)
+                {
+
+                    @*@if (item.ReserveList.FirstOrDefault(p => p.borrower.Id == ViewBag.thisUser) != null)*@
+
+                    @*@if (item.ReserveList.Where(p => p.borrower.Id.Equals(ViewBag.thisUser)).Count() != 0)*@
+
+                   @*@if (item.ReserveList.Contains(ViewBag.thisUser))*@
+
+                bool found = false;
+                @*@item.ReserveList.Count*@
+
+                @foreach(Reservation r in item.ReserveList)
                     {
-                        <a asp-action="Edit" asp-route-id="@item.bID">Reserve</a>
+                    <h2>Hello</h2>
+                    if (r.borrower == ViewBag.thisUser)
+                    {
+                        found = true;
+                        
                     }
-                    @*<a asp-action="Edit" asp-route-id="@item.bID">In Use/Not in Use</a> |*@
-                    @*<a asp-action="Details" asp-route-id="@item.bID">Details</a> |
-        <a asp-action="Delete" asp-route-id="@item.bID">Delete</a>*@
-                </td>
-            </tr>
+                }
+
+                    @if(found)
+
+                    {
+                        <a asp-action="Unreserve" asp-route-id="@item.bID">Unreserve</a>
+                    }
+                    else
+                    {
+                        <a asp-action="Reserve" asp-route-id="@item.bID">Reserve</a> 
+                    }
+                    @*<a asp-action="Edit" asp-route-id="@item.bID">Reserve/Unreserve</a>*@
+                }
+
+                | <a asp-action="EditBook" asp-route-id="@item.bID">Edit Book Details</a> 
+
+                @*<a asp-action="Details" asp-route-id="@item.bID">Details</a> |
+        <a asp-action="Delete" asp-route-id="@item.bID">Delete</a> |*@
+            </td>
+        </tr>
         }
     </tbody>
 </table>

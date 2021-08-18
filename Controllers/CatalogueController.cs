@@ -46,6 +46,60 @@ namespace DomainModel.Controllers
             return View(myBooks);
         }
 
+        // GET: Reserve
+        public async Task<IActionResult> Reserve(int id)
+        {
+            var userId = _userManager.GetUserId(HttpContext.User);
+            ApplicationUser person = await _context.ApplicationUsers.FirstOrDefaultAsync(p => p.Id == userId);
+
+            Catalogue c = await _context.catalogues.FirstOrDefaultAsync(p => p.bID == id);
+            
+            Reservation reservation = new Reservation();
+            reservation.borrower = person;
+            reservation.DateReserved = DateTime.Now;
+            reservation.ReadingOrder = 1;
+            c.ReserveList.Add(reservation);
+            
+
+            await _context.SaveChangesAsync();
+
+            ViewBag.thisUser = userId;
+
+            //return View();
+            return RedirectToAction("Index", c);
+
+        }
+        // GET: Unreserve
+        public async Task<IActionResult> Unreserve(int? id)
+        {
+            var userId = _userManager.GetUserId(HttpContext.User);
+            ApplicationUser person = await _context.ApplicationUsers.FirstOrDefaultAsync(p => p.Id == userId);
+
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var reservation = await _context.reservations
+                //.FirstOrDefaultAsync(m => m.reservationID == id);
+                .Where(m => m.borrower.Id == userId)
+                .Where(p => p.catalogue.bID == id)
+                .FirstAsync();
+
+            if (reservation == null)
+            {
+                return NotFound();
+            }
+
+            _context.reservations.Remove(reservation);
+            await _context.SaveChangesAsync();
+
+            ViewBag.thisUser = userId;
+
+            return RedirectToAction("Index");
+
+        }
+
         public async Task<IActionResult> Index()
         {
             var userId = _userManager.GetUserId(HttpContext.User);
@@ -80,7 +134,8 @@ namespace DomainModel.Controllers
             return View(catalogue);
         }
 
-        // GET: Catalogue/Create
+
+        // GET: Catalogue/Create (to return the view)
         public IActionResult Create()
         {
             return View();
@@ -91,10 +146,18 @@ namespace DomainModel.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("bID,inUse")] Catalogue catalogue)
+        public async Task<IActionResult> Create(Book book)
         {
+            var userId = _userManager.GetUserId(HttpContext.User);
+            ApplicationUser person = await _context.ApplicationUsers.FirstOrDefaultAsync(p => p.Id == userId);
+            Catalogue catalogue = new Catalogue();
+            catalogue.Owner = person;
+            catalogue.book = book;
+            
+
             if (ModelState.IsValid)
             {
+                _context.Add(book);
                 _context.Add(catalogue);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -166,6 +229,28 @@ namespace DomainModel.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(catalogue);
+        }
+
+        // GET: CatalogueController/Edit/7
+        public ActionResult EditBook(int? id)
+        {
+            return View();
+        }
+
+        // POST: CatalogueController/EditBook
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditBook(int id, [Bind("bID,inUse")] Catalogue catalogue)
+        {
+            try
+            {
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
         }
 
         // GET: Catalogue/Delete/5
