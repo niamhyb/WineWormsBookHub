@@ -14,8 +14,6 @@ namespace DomainModel.Models
         [MinLength(13)]
         [MaxLength(13)]
         public string ISBN { get; set; }
-
-        //not sure if i need code below, added it for Book view 'create'
         public string Title { get; set; }
         public string Author { get; set; }
 

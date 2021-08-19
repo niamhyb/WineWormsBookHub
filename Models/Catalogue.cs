@@ -28,7 +28,6 @@ namespace DomainModel.Models
     {
         [Key]
         public int bID { get; set; }
-        //public int BookID { get; set; }
 
         //not the book/owner details, a reference to them
         public virtual Book book { get; set; }
@@ -54,7 +53,6 @@ namespace DomainModel.Models
     {
         [Key]
         public int reservationID { get; set; }
-        //public Book book { get; set; }
         public virtual ApplicationUser borrower { get; set; }
         public DateTime DateReserved { get; set; }
 
@@ -68,7 +66,6 @@ namespace DomainModel.Models
     {
         [Key]
         public int loanID { get; set; }
-        //public Book book { get; set; }
         public virtual ApplicationUser borrower { get; set; }
 
         public DateTime DateLoaned { get; set; }
