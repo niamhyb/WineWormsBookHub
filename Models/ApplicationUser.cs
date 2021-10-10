@@ -6,6 +6,13 @@ using System.Threading.Tasks;
 
 namespace DomainModel.Models
 {
+
+    public enum Roles
+    {
+        Admin,
+        Member
+    }
+
     public class ApplicationUser : IdentityUser
     {
         [PersonalData]
@@ -14,5 +21,20 @@ namespace DomainModel.Models
         public string LastName { get; set; }
         [PersonalData]
         public DateTime BirthDate { get; set; }
+        //public List<Book> books { get; set; }
+        //public ApplicationUser()
+        //{
+        //    //books = new List<Book>();
+        //}
+    }
+
+    public class Administrator : ApplicationUser
+    {
+        //this is the administrator
+    }
+
+    public class Member : ApplicationUser
+    {
+        //all other members
     }
 }
