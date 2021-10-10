@@ -7,9 +7,21 @@
 <h1>All Books in Catalogue</h1>
 @*@ViewBag.thisUser*@
 
+<form asp-controller="Catalogue" asp-action="Index" asp-route-eid="@ViewBag.eid" asp-route-assessid="@ViewBag.assessid" asp-route-srch="@ViewBag.searchtext" asp-route-sta="@ViewBag.sta">
+    <p>
+         Search by Title or Author <br /><input type="text" name="srch" value="@ViewBag.searchtext" />
+        <input type="submit" value="Filter" />
+    </p>
+</form>
+<p></p>
+@ViewBag.message
+<p></p>
+
+
+
 @*<p>
-    <a asp-action="Create">Create New</a>
-</p>*@
+        <a asp-action="Create">Create New</a>
+    </p>*@
 <table class="table">
     <thead>
         <tr>
@@ -23,70 +35,70 @@
                 @Html.Label("Owner")
             </th>
             @*<th>
-                @Html.Label("Reservation Status")
-            </th>*@
+                    @Html.Label("Reservation Status")
+                </th>*@
             <th></th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.book.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.book.Author)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Owner.FirstName)
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.book.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.book.Author)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Owner.FirstName)
 
-                @Html.DisplayFor(modelItem => item.Owner.LastName)
-            </td>
-            @*<td>
-                @Html.DisplayFor(modelItem => item.inUse)
-            </td>*@
-            <td>
-                @if (item.Owner.Id != ViewBag.thisUser)
-                {
-
-                    @*@if (item.ReserveList.FirstOrDefault(p => p.borrower.Id == ViewBag.thisUser) != null)*@
-
-                    @*@if (item.ReserveList.Where(p => p.borrower.Id.Equals(ViewBag.thisUser)).Count() != 0)*@
-
-                   @*@if (item.ReserveList.Contains(ViewBag.thisUser))*@
-
-                bool found = false;
-                @*@item.ReserveList.Count*@
-
-                @foreach(Reservation r in item.ReserveList)
+                    @Html.DisplayFor(modelItem => item.Owner.LastName)
+                </td>
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.inUse)
+                    </td>*@
+                <td>
+                    @if (item.Owner.Id != ViewBag.thisUser)
                     {
-                    <h2>Hello</h2>
-                    if (r.borrower == ViewBag.thisUser)
-                    {
-                        found = true;
-                        
+
+                        @*@if (item.ReserveList.FirstOrDefault(p => p.borrower.Id == ViewBag.thisUser) != null)*@
+
+                        @*@if (item.ReserveList.Where(p => p.borrower.Id.Equals(ViewBag.thisUser)).Count() != 0)*@
+
+                        @*@if (item.ReserveList.Contains(ViewBag.thisUser))*@
+
+                        bool found = false;
+                        @*@item.ReserveList.Count*@
+
+                        @foreach (Reservation r in item.ReserveList)
+                        {
+                            <h2>Hello</h2>
+                            if (r.borrower == ViewBag.thisUser)
+                            {
+                                found = true;
+
+                            }
+                        }
+
+                        @if (found)
+
+                        {
+                            <a asp-action="Unreserve" asp-route-id="@item.bID">Unreserve</a>
+                        }
+                        else
+                        {
+                            <a asp-action="Reserve" asp-route-id="@item.bID">Reserve</a>
+                        }
+                        @*<a asp-action="Edit" asp-route-id="@item.bID">Reserve/Unreserve</a>*@
                     }
-                }
 
-                    @if(found)
+                    | <a asp-action="EditBook" asp-route-id="@item.bID">Edit Book Details</a>
 
-                    {
-                        <a asp-action="Unreserve" asp-route-id="@item.bID">Unreserve</a>
-                    }
-                    else
-                    {
-                        <a asp-action="Reserve" asp-route-id="@item.bID">Reserve</a> 
-                    }
-                    @*<a asp-action="Edit" asp-route-id="@item.bID">Reserve/Unreserve</a>*@
-                }
-
-                | <a asp-action="EditBook" asp-route-id="@item.bID">Edit Book Details</a> 
-
-                @*<a asp-action="Details" asp-route-id="@item.bID">Details</a> |
-        <a asp-action="Delete" asp-route-id="@item.bID">Delete</a> |*@
-            </td>
-        </tr>
+                    @*<a asp-action="Details" asp-route-id="@item.bID">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.bID">Delete</a> |*@
+                </td>
+            </tr>
         }
     </tbody>
 </table>

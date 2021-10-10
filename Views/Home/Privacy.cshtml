@@ -1,6 +1,44 @@
-﻿@{
+﻿@model IEnumerable<DomainModel.Models.Catalogue>
+
+@{
     ViewData["Title"] = "Books On Loan";
 }
 <h1>@ViewData["Title"]</h1>
 
-<p></p>
+<p>
+<a asp-action="Create">Create New Loan</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.book.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.book.Author)
+            </th>
+            <th>
+                @Html.Label("Borrower")
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    @*<tbody>
+@foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.book.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.book.Author)
+                </td>
+     
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.bID">On Loan</a> |
+                    <a asp-action="Delete" asp-route-id="@item.bID">Delete</a>
+                </td>
+            </tr>
+}
+    </tbody>*@
+</table>
+

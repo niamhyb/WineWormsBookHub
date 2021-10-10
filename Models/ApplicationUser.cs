@@ -6,6 +6,13 @@ using System.Threading.Tasks;
 
 namespace DomainModel.Models
 {
+
+    public enum Roles
+    {
+        Admin,
+        Member
+    }
+
     public class ApplicationUser : IdentityUser
     {
         [PersonalData]
