@@ -7,7 +7,7 @@
 <h1>All Books in Catalogue</h1>
 @*@ViewBag.thisUser*@
 
-<form asp-controller="Catalogue" asp-action="Index" asp-route-eid="@ViewBag.eid" asp-route-assessid="@ViewBag.assessid" asp-route-srch="@ViewBag.searchtext" asp-route-sta="@ViewBag.sta">
+<form asp-controller="Catalogue" asp-action="Index" asp-route-srch="@ViewBag.searchtext" asp-route-sta="@ViewBag.sta">
     <p>
          Search by Title or Author <br /><input type="text" name="srch" value="@ViewBag.searchtext" />
         <input type="submit" value="Filter" />

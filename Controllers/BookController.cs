@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace DomainModel.Controllers
@@ -27,7 +28,9 @@ namespace DomainModel.Controllers
         // GET: BookController
         public async Task<ActionResult> Index()
         {
-            var userId = _userManager.GetUserId(HttpContext.User);
+            //var userId = _userManager.GetUserId(HttpContext.User);
+            //replace line above with line below
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             ApplicationUser person = await _context.ApplicationUsers.FirstOrDefaultAsync(p => p.Id == userId);
 
             

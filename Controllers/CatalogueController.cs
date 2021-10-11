@@ -100,21 +100,30 @@ namespace DomainModel.Controllers
 
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? srch)
         {
             var userId = _userManager.GetUserId(HttpContext.User);
             ApplicationUser person = await _context.ApplicationUsers.FirstOrDefaultAsync(p => p.Id == userId);
 
             var myBooks = await _context.catalogues
-            .Where(b => b.inUse == true)
+            //.Where((b => b.inUse && (b.book.Title.Contains(srch) || b.book.Author.Contains(srch))))
+            .Where(b => b.inUse)
             .Include(p => p.book)
             .Include(f => f.Owner)
             .ToListAsync();
 
+            var filteredBooks = myBooks;
+
+            if (!string.IsNullOrEmpty(srch))
+            {
+                filteredBooks = myBooks.Where(b => b.book.Title.ToLower().Contains(srch.ToLower()) || b.book.Author.ToLower().Contains(srch.ToLower())).ToList();
+            }
+            
+
             ViewBag.thisUser = userId;
 
 
-            return View(myBooks);
+            return View(filteredBooks);
         }
         // GET: Catalogue/Details/5
         public async Task<IActionResult> Details(int? id)
