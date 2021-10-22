@@ -100,9 +100,8 @@ namespace DomainModel.Areas.Identity.Pages.Account
                 {
                     //add this extra
                     var user = await _userManager.FindByEmailAsync(Input.Email);
-                    if (user != null)
-                    {
-
+                    //if (user != null)
+                    //{
                         var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                         if (result.Succeeded)
                         {
@@ -123,11 +122,11 @@ namespace DomainModel.Areas.Identity.Pages.Account
                             ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                             return Page();
                         }
-                    }
-                    else
-                    {
-                        return NotFound("User not found. Please check the e-mail!");
-                    }
+                    //}
+                    //else
+                    //{
+                    //    return NotFound("User not found. Please check the e-mail!");
+                    //}
 
                 }
             }

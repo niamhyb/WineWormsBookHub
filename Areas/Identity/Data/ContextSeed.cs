@@ -33,10 +33,10 @@ namespace DomainModel.Areas.Identity.Data
                 var user = await userManager.FindByEmailAsync(defaultUser.Email);
                 if (user == null)
                 {
-                    await userManager.CreateAsync(defaultUser, "sunshine4");
+                    await userManager.CreateAsync(defaultUser, "Sunshine4!");
                     //assign default user to both roles
-                    await userManager.AddToRoleAsync(defaultUser, Models.Roles.Admin.ToString());
-                    await userManager.AddToRoleAsync(defaultUser, Models.Roles.Member.ToString());
+                    await userManager.AddToRoleAsync(defaultUser, Roles.Admin.ToString());
+                    await userManager.AddToRoleAsync(defaultUser, Roles.Member.ToString());
                 }
 
             }
