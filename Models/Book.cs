@@ -23,5 +23,12 @@ namespace DomainModel.Models
         [Range(1, 5, ErrorMessage = "Rating must be 1 to 5")]
         public int AvgRating { get; set; }
 
+        public virtual List<Reservation> ReserveList { get; set; }
+
+        public Book()
+        {
+            ReserveList = new List<Reservation>();
+        }
+
     }
 }

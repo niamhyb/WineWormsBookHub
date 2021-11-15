@@ -1,0 +1,42 @@
+﻿@model DomainModel.Models.Book
+
+@{
+    ViewData["Title"] = "GetBookByISBN";
+}
+<form asp-controller="Catalogue" asp-action="GetBookByISBN" asp-route-srch="@ViewBag.searchtext" asp-route-sta="@ViewBag.sta">
+    <p>
+        Search by ISBN <br /><input type="text" name="srch" value="@ViewBag.searchtext" />
+        <input type="submit" value="Filter" />
+    </p>
+</form>
+
+
+<div>
+    <h4>Book</h4>
+    <hr />
+    @if (Model != null)
+    {
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.ISBN)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.ISBN)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Title)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Title)
+            </dd>
+        </dl>
+    }
+    </div>
+<div>
+    @if (Model != null)
+    {
+        <a asp-action="AddCopy" asp-route-id="@Model.BookID">Add My Copy To Catalogue</a>
+  }
+
+    <a asp-action="Index">Back to List</a>
+</div>

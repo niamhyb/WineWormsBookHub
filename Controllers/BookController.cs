@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using PagedList;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DomainModel.Controllers
 {
@@ -26,23 +28,26 @@ namespace DomainModel.Controllers
             _logger = logger;
         }
         // GET: BookController
+        [Authorize(Roles="Admin")]
         public async Task<ActionResult> Index()
         {
-            //var userId = _userManager.GetUserId(HttpContext.User);
             //replace line above with line below
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             ApplicationUser person = await _context.ApplicationUsers.FirstOrDefaultAsync(p => p.Id == userId);
 
-            
-            var myBooks = await _context.catalogues.Where(b => b.Owner == person)
-                .Include(p => p.book)
-                .ToListAsync();
-            List<Book> booklist = new List<Book>();
-            foreach (Catalogue c in myBooks)
-            {
-                booklist.Add(c.book);
 
-            }
+            //var myBooks = await _context.catalogues.Where(b => b.Owner == person)
+            //    .Include(p => p.book)
+            //    .ToListAsync();
+            //List<Book> booklist = new List<Book>();
+            //foreach (Catalogue c in myBooks)
+            //{
+            //    booklist.Add(c.book);
+
+            //}
+
+            var myBooks = await _context.BookTable.ToListAsync();
+
             return View(myBooks);
         }
 
@@ -74,24 +79,54 @@ namespace DomainModel.Controllers
         }
 
         // GET: BookController/Edit/5
-        public ActionResult Edit(int id)
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> Edit(int? id)
         {
-            return View();
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var book = await _context.BookTable.FirstOrDefaultAsync(b => b.BookID == id);
+            if (book == null)
+            {
+                return NotFound();
+            }
+
+            //_context.Update(book);
+            //await _context.SaveChangesAsync();
+
+            return View(book);
         }
 
         // POST: BookController/Edit/5
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        //public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> Edit(/*int id, */Book book)
         {
-            try
+            if (ModelState.IsValid)
             {
+                try
+                {
+                    _context.Update(book);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!BookExists(book.BookID))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
                 return RedirectToAction(nameof(Index));
             }
-            catch
-            {
-                return View();
-            }
+            return View(book);
         }
 
         // GET: BookController/Delete/5
@@ -113,6 +148,11 @@ namespace DomainModel.Controllers
             {
                 return View();
             }
+        }
+
+        private bool BookExists(int id)
+        {
+            return _context.BookTable.Any(e => e.BookID == id);
         }
     }
 }
