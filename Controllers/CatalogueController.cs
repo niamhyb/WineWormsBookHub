@@ -9,6 +9,7 @@ using DomainModel.Data;
 using DomainModel.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DomainModel.Controllers
 {
@@ -36,29 +37,29 @@ namespace DomainModel.Controllers
                 myBooks = await _context.catalogues.Where(b => b.Owner == person)
                 .Include(p => p.book)
                 .ToListAsync();
-            
-            //List<Book> booklist = new List<Book>();
-            //foreach (Catalogue c in myBooks)
-            //{
-            //    booklist.Add(c.book);
-
-            //}
+       
             return View(myBooks);
         }
 
         // GET: Reserve
+        [Authorize(Roles= "Member")]
         public async Task<IActionResult> Reserve(int id)
         {
             var userId = _userManager.GetUserId(HttpContext.User);
             ApplicationUser person = await _context.ApplicationUsers.FirstOrDefaultAsync(p => p.Id == userId);
 
-            Catalogue c = await _context.catalogues.FirstOrDefaultAsync(p => p.bID == id);
-            
+            //Catalogue c = await _context.catalogues.FirstOrDefaultAsync(p => p.bID == id);
+            //List<Reservation> ReserveList = new List<Reservation>();
+            var ReserveList = await _context.reservations.ToListAsync();
+            Book b = await _context.BookTable.FirstOrDefaultAsync(p => p.BookID == id);
+
             Reservation reservation = new Reservation();
             reservation.borrower = person;
             reservation.DateReserved = DateTime.Now;
             reservation.ReadingOrder = 1;
-            c.ReserveList.Add(reservation);
+            //reservation.book = b;
+            //ReserveList.Add(reservation);
+            b.ReserveList.Add(reservation);
             
 
             await _context.SaveChangesAsync();
@@ -66,55 +67,75 @@ namespace DomainModel.Controllers
             ViewBag.thisUser = userId;
 
             //return View();
-            return RedirectToAction("Index", c);
-
-        }
-        // GET: Unreserve
-        public async Task<IActionResult> Unreserve(int? id)
-        {
-            var userId = _userManager.GetUserId(HttpContext.User);
-            ApplicationUser person = await _context.ApplicationUsers.FirstOrDefaultAsync(p => p.Id == userId);
-
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var reservation = await _context.reservations
-                //.FirstOrDefaultAsync(m => m.reservationID == id);
-                .Where(m => m.borrower.Id == userId)
-                .Where(p => p.catalogue.bID == id)
-                .FirstAsync();
-
-            if (reservation == null)
-            {
-                return NotFound();
-            }
-
-            _context.reservations.Remove(reservation);
-            await _context.SaveChangesAsync();
-
-            ViewBag.thisUser = userId;
-
             return RedirectToAction("Index");
 
         }
+        // GET: Unreserve
+        //public async Task<IActionResult> Unreserve(int? id)
+        //{
+        //    var userId = _userManager.GetUserId(HttpContext.User);
+        //    ApplicationUser person = await _context.ApplicationUsers.FirstOrDefaultAsync(p => p.Id == userId);
 
-        public async Task<IActionResult> Index()
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    var reservation = await _context.reservations
+        //        //.FirstOrDefaultAsync(m => m.reservationID == id);
+        //        .Where(m => m.borrower.Id == userId)
+        //        .Where(p => p.book.BookID == id)
+        //        .FirstAsync();
+
+        //    if (reservation == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    _context.reservations.Remove(reservation);
+        //    await _context.SaveChangesAsync();
+
+        //    ViewBag.thisUser = userId;
+
+        //    return RedirectToAction("Index");
+
+        //}
+
+        public async Task<IActionResult> Index(string? srch)
         {
             var userId = _userManager.GetUserId(HttpContext.User);
             ApplicationUser person = await _context.ApplicationUsers.FirstOrDefaultAsync(p => p.Id == userId);
 
             var myBooks = await _context.catalogues
-            .Where(b => b.inUse == true)
+            //.Where((b => b.inUse && (b.book.Title.Contains(srch) || b.book.Author.Contains(srch))))
+            .Where(b => b.inUse)
             .Include(p => p.book)
-            .Include(f => f.Owner)
+                .ThenInclude(r => r.ReserveList)
+            //.Include(f => f.Owner)
+            //.GroupBy(b => b.book.BookID)
+            //.Select(p => p.First())
+            .OrderBy(g => g.book.Title)
             .ToListAsync();
+
+            var reservations = await _context.reservations.ToListAsync();
+
+            var filteredBooks = myBooks;
+
+            if (!string.IsNullOrEmpty(srch))
+            {
+                filteredBooks = myBooks.Where(b => b.book.Title.ToLower().Contains(srch.ToLower()) || b.book.Author.ToLower().Contains(srch.ToLower())).ToList();
+            }
+
+            var fb = filteredBooks.Distinct()/*.Select(b => b.book.BookID)*/.ToList();
+
+            //14/11/21
+            //CatalogueVM catalogueVM = new CatalogueVM() { Catalogue = filteredBooks, ReserveList = reservations};
 
             ViewBag.thisUser = userId;
 
+            //return View(catalogueVM);
+            return View(fb);
 
-            return View(myBooks);
         }
         // GET: Catalogue/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -173,12 +194,12 @@ namespace DomainModel.Controllers
               return NotFound();
             }
 
-            var catalogue = await _context.catalogues.FindAsync(id);
+            var catalogue = await _context.catalogues.Include(b=> b.book).FirstOrDefaultAsync(b=> b.bID == id);
             if (catalogue == null)
             {
                 return NotFound();
             }
-
+          
             //Catalogue c = await _context.catalogues.FirstOrDefaultAsync(p => p.bID == id);
             if (catalogue.inUse == true)
             {
@@ -201,12 +222,12 @@ namespace DomainModel.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("bID,inUse")] Catalogue catalogue)
+        public async Task<IActionResult> Edit(/*int id,*/ /*[Bind("bID,ISBN,Title,Author,Genres,AvgRating")]*/ Catalogue catalogue)
         {
-            if (id != catalogue.bID)
-            {
-                return NotFound();
-            }
+            //if (id != catalogue.bID)
+            //{
+            //    return NotFound();
+            //}
 
             if (ModelState.IsValid)
             {
@@ -232,26 +253,26 @@ namespace DomainModel.Controllers
         }
 
         // GET: CatalogueController/Edit/7
-        public ActionResult EditBook(int? id)
-        {
-            return View();
-        }
+        //public ActionResult Editbook(int? id)
+        //{
+        //    return View();
+        //}
 
-        // POST: CatalogueController/EditBook
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditBook(int id, [Bind("bID,inUse")] Catalogue catalogue)
-        {
-            try
-            {
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+        //// POST: CatalogueController/EditBook
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> EditBook(int id, [Bind("bID,inUse")] Catalogue catalogue)
+        //{
+        //    try
+        //    {
+        //        await _context.SaveChangesAsync();
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    catch
+        //    {
+        //        return View();
+        //    }
+        //}
 
         // GET: Catalogue/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -285,6 +306,74 @@ namespace DomainModel.Controllers
         private bool CatalogueExists(int id)
         {
             return _context.catalogues.Any(e => e.bID == id);
+        }
+
+        //Get
+        public async Task<IActionResult> GetBookByISBN()
+        {
+            //if (srch == null)
+            //{
+            //    return RedirectToAction(nameof(Index));
+            //}
+
+            //var userId = _userManager.GetUserId(HttpContext.User);
+            //ApplicationUser person = await _context.ApplicationUsers.FirstOrDefaultAsync(p => p.Id == userId);
+
+            //Book myBook = await _context.BookTable
+            //.FirstOrDefaultAsync(b=> b.ISBN.ToUpper() == srch.ToUpper());
+
+            //if (myBook == null)
+            //{
+            //    return RedirectToAction("Create");
+            //}
+            return View();
+        }
+
+        //Post
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> GetBookByISBN(string? srch)
+        {
+            if (srch == null)
+            {
+                return View();
+            }
+
+            ViewBag.searchtext = srch;
+
+            var userId = _userManager.GetUserId(HttpContext.User);
+            ApplicationUser person = await _context.ApplicationUsers.FirstOrDefaultAsync(p => p.Id == userId);
+
+            Book myBook = await _context.BookTable
+            .FirstOrDefaultAsync(b => b.ISBN.ToUpper() == srch.ToUpper());
+
+            if (myBook == null)
+            {
+                return RedirectToAction("Create");
+            }
+            return View(myBook);
+        }
+
+        public async Task<IActionResult> AddCopy(int? id)
+        {
+            if (id == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            var userId = _userManager.GetUserId(HttpContext.User);
+            ApplicationUser person = await _context.ApplicationUsers.FirstOrDefaultAsync(p => p.Id == userId);
+
+            Book myBook = await _context.BookTable
+            .FirstOrDefaultAsync(b => b.BookID == id);
+
+            if (myBook == null)
+            {
+                return RedirectToAction("Create");
+            }
+            await _context.catalogues.AddAsync(new Catalogue() { book = myBook, inUse = true, Owner = person });
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
     }
 }

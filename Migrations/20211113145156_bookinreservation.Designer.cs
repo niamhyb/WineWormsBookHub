@@ -4,14 +4,16 @@ using DomainModel.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DomainModel.Migrations
 {
     [DbContext(typeof(DomainModelContext))]
-    partial class DomainModelContextModelSnapshot : ModelSnapshot
+    [Migration("20211113145156_bookinreservation")]
+    partial class bookinreservation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -184,6 +186,9 @@ namespace DomainModel.Migrations
                     b.Property<int?>("BookID")
                         .HasColumnType("int");
 
+                    b.Property<int?>("CataloguebID")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("DateReserved")
                         .HasColumnType("datetime2");
 
@@ -196,6 +201,8 @@ namespace DomainModel.Migrations
                     b.HasKey("reservationID");
 
                     b.HasIndex("BookID");
+
+                    b.HasIndex("CataloguebID");
 
                     b.HasIndex("borrowerId");
 
@@ -364,8 +371,12 @@ namespace DomainModel.Migrations
             modelBuilder.Entity("DomainModel.Models.Reservation", b =>
                 {
                     b.HasOne("DomainModel.Models.Book", "book")
-                        .WithMany("ReserveList")
+                        .WithMany()
                         .HasForeignKey("BookID");
+
+                    b.HasOne("DomainModel.Models.Catalogue", null)
+                        .WithMany("ReserveList")
+                        .HasForeignKey("CataloguebID");
 
                     b.HasOne("DomainModel.Models.ApplicationUser", "borrower")
                         .WithMany()
@@ -427,14 +438,11 @@ namespace DomainModel.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("DomainModel.Models.Book", b =>
-                {
-                    b.Navigation("ReserveList");
-                });
-
             modelBuilder.Entity("DomainModel.Models.Catalogue", b =>
                 {
                     b.Navigation("LoanList");
+
+                    b.Navigation("ReserveList");
                 });
 #pragma warning restore 612, 618
         }

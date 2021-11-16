@@ -28,24 +28,24 @@ namespace DomainModel.Models
     {
         [Key]
         public int bID { get; set; }
+        //bID is the Catalogue ID
 
         //not the book/owner details, a reference to them
-        public virtual Book book { get; set; }
-        public virtual ApplicationUser Owner { get; set; }
+        public /*virtual*/ Book book { get; set; }
+        public /*virtual*/ ApplicationUser Owner { get; set; }
 
         //list of members who want particular book
-        public virtual List<Reservation> ReserveList { get; set; }
+        //public virtual List<Reservation> ReserveList { get; set; }
         public virtual List<Loan> LoanList { get; set; }
         //book is inuse or not
+        [Display(Name = "In Use")]
         public bool inUse { get; set; } = true;
 
         public Catalogue()
         {
-            ReserveList = new List<Reservation>();
+            //ReserveList = new List<Reservation>();
             LoanList = new List<Loan>();
         }
-
-
     }
 
     //books that members want to read
@@ -57,7 +57,9 @@ namespace DomainModel.Models
         public DateTime DateReserved { get; set; }
 
         public int ReadingOrder { get; set; }
-        public Catalogue catalogue { get; set; }
+        //public Catalogue catalogue { get; set; }
+
+        //public Book book { get; set; }
 
     }
 
@@ -71,5 +73,13 @@ namespace DomainModel.Models
         public DateTime DateLoaned { get; set; }
 
         public DateTime DateReturned { get; set; }
+    }
+
+    public class CatalogueVM
+    {
+        [Key]
+        public int ID { get; set; }
+        public List<Catalogue> Catalogue { get; set; }
+        public List<Reservation> ReserveList { get; set; }
     }
 }

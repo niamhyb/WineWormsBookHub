@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DomainModel.Migrations
 {
     [DbContext(typeof(DomainModelContext))]
-    [Migration("20210816173902_reservationList")]
-    partial class reservationList
+    [Migration("20211114121330_bookinreservation1")]
+    partial class bookinreservation1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -183,6 +183,9 @@ namespace DomainModel.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int?>("BookID")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("DateReserved")
                         .HasColumnType("datetime2");
 
@@ -192,14 +195,11 @@ namespace DomainModel.Migrations
                     b.Property<string>("borrowerId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("cataloguebID")
-                        .HasColumnType("int");
-
                     b.HasKey("reservationID");
 
-                    b.HasIndex("borrowerId");
+                    b.HasIndex("BookID");
 
-                    b.HasIndex("cataloguebID");
+                    b.HasIndex("borrowerId");
 
                     b.ToTable("reservations");
                 });
@@ -365,17 +365,17 @@ namespace DomainModel.Migrations
 
             modelBuilder.Entity("DomainModel.Models.Reservation", b =>
                 {
+                    b.HasOne("DomainModel.Models.Book", "book")
+                        .WithMany("ReserveList")
+                        .HasForeignKey("BookID");
+
                     b.HasOne("DomainModel.Models.ApplicationUser", "borrower")
                         .WithMany()
                         .HasForeignKey("borrowerId");
 
-                    b.HasOne("DomainModel.Models.Catalogue", "catalogue")
-                        .WithMany("ReserveList")
-                        .HasForeignKey("cataloguebID");
+                    b.Navigation("book");
 
                     b.Navigation("borrower");
-
-                    b.Navigation("catalogue");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -429,11 +429,14 @@ namespace DomainModel.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("DomainModel.Models.Book", b =>
+                {
+                    b.Navigation("ReserveList");
+                });
+
             modelBuilder.Entity("DomainModel.Models.Catalogue", b =>
                 {
                     b.Navigation("LoanList");
-
-                    b.Navigation("ReserveList");
                 });
 #pragma warning restore 612, 618
         }

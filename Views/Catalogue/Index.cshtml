@@ -1,4 +1,8 @@
 ﻿@model IEnumerable<DomainModel.Models.Catalogue>
+@*@model DomainModel.Models.CatalogueVM*@
+
+@*@model IEnumerable<DomainModel.Models.Book>*@
+
 
 @{
     ViewData["Title"] = "Index";
@@ -7,9 +11,9 @@
 <h1>All Books in Catalogue</h1>
 @*@ViewBag.thisUser*@
 
-<form asp-controller="Catalogue" asp-action="Index" asp-route-eid="@ViewBag.eid" asp-route-assessid="@ViewBag.assessid" asp-route-srch="@ViewBag.searchtext" asp-route-sta="@ViewBag.sta">
+<form asp-controller="Catalogue" asp-action="Index" asp-route-srch="@ViewBag.searchtext" asp-route-sta="@ViewBag.sta">
     <p>
-         Search by Title or Author <br /><input type="text" name="srch" value="@ViewBag.searchtext" />
+        Search by Title or Author <br /><input type="text" name="srch" value="@ViewBag.searchtext" />
         <input type="submit" value="Filter" />
     </p>
 </form>
@@ -17,64 +21,60 @@
 @ViewBag.message
 <p></p>
 
-
-
 @*<p>
         <a asp-action="Create">Create New</a>
     </p>*@
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.book.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.book.Author)
-            </th>
-            <th>
-                @Html.Label("Owner")
-            </th>
-            @*<th>
-                    @Html.Label("Reservation Status")
-                </th>*@
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+
+<table id="example" class="table table-striped table-bordered" style="width:100%">
+        <thead>
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.book.Title)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.book.Author)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Owner.FirstName)
+                <th>
+                    @Html.DisplayNameFor(model => model.book.Title)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.book.Author)
+                </th>
+                <th>
+                    @Html.Label("Owner")
+                </th>
+                @*<th>
+                        @Html.Label("Reservation Status")
+                    </th>*@
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.book.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.book.Author)
+                    </td>
+                    @*<td>
+                            @Html.DisplayFor(modelItem => item.FirstName)
 
-                    @Html.DisplayFor(modelItem => item.Owner.LastName)
-                </td>
-                @*<td>
-                        @Html.DisplayFor(modelItem => item.inUse)
-                    </td>*@
-                <td>
-                    @if (item.Owner.Id != ViewBag.thisUser)
-                    {
+                            @Html.DisplayFor(modelItem => item.LastName)
+                        </td>*@
+                    @*<td>
+                            @Html.DisplayFor(modelItem => item.inUse)
+                        </td>*@
+                    <td>
+                        @*@if (item.Owner.Id != ViewBag.thisUser)
+                            {*@
 
-                        @*@if (item.ReserveList.FirstOrDefault(p => p.borrower.Id == ViewBag.thisUser) != null)*@
+                        @{
+                            bool found = false;
+                        }
 
-                        @*@if (item.ReserveList.Where(p => p.borrower.Id.Equals(ViewBag.thisUser)).Count() != 0)*@
-
-                        @*@if (item.ReserveList.Contains(ViewBag.thisUser))*@
-
-                        bool found = false;
                         @*@item.ReserveList.Count*@
 
-                        @foreach (Reservation r in item.ReserveList)
+                        @foreach (Reservation r in item.book.ReserveList)
                         {
-                            <h2>Hello</h2>
-                            if (r.borrower == ViewBag.thisUser)
+
+                            if (r.borrower.Id == ViewBag.thisUser)
                             {
                                 found = true;
 
@@ -84,21 +84,49 @@
                         @if (found)
 
                         {
-                            <a asp-action="Unreserve" asp-route-id="@item.bID">Unreserve</a>
+                            @*<a asp-action="Unreserve" asp-route-id="@item.bID">Unreserve</a>*@
+                            @Html.Label("Reserved")
                         }
                         else
                         {
-                            <a asp-action="Reserve" asp-route-id="@item.bID">Reserve</a>
+                            <a asp-action="Reserve" asp-route-id="@item.book.BookID">Reserve</a>
                         }
                         @*<a asp-action="Edit" asp-route-id="@item.bID">Reserve/Unreserve</a>*@
-                    }
+                        @*}*@
 
-                    | <a asp-action="EditBook" asp-route-id="@item.bID">Edit Book Details</a>
+                        @*| <a asp-action="Edit" asp-route-id="@item.bID">Edit Book Details</a>*@
 
-                    @*<a asp-action="Details" asp-route-id="@item.bID">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.bID">Delete</a> |*@
-                </td>
-            </tr>
-        }
-    </tbody>
+                        @*<a asp-action="Details" asp-route-id="@item.bID">Details</a> |
+                            <a asp-action="Delete" asp-route-id="@item.bID">Delete</a> |*@
+                    </td>
+                </tr>
+            }
+        </tbody>
 </table>
+
+        @*<nav aria-label="...">
+                <ul class="pagination">
+                    <li class="page-item disabled">
+                        <span class="page-link">Previous</span>
+                    </li>
+                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item active">
+                        <span class="page-link">
+                            2
+                            <span class="sr-only">(current)</span>
+                        </span>
+                    </li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">Next</a>
+                    </li>
+                </ul>
+            </nav>*@
+
+        @section scripts
+{
+            <script 
+                    src="~/js/catalogue.js">
+            </script>
+}
+      
