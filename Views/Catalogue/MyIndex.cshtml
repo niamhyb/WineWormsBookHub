@@ -9,7 +9,7 @@
 <p>
     <a asp-action="GetBookByISBN">Add a Book</a>
 </p>
-<table class="table">
+<table id="example" class="table table-striped table-bordered" cellspacing="0" style="width:100%">
     <thead>
         <tr>
             <th>
@@ -21,35 +21,41 @@
             <th>
                 @Html.DisplayNameFor(model => model.inUse)
             </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.book.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.book.Author)
-            </td>
-            @*<td>
-                @Html.DisplayFor(modelItem => item.inUse)
-            </td>*@
-        <td>
-            @if (item.inUse)
-            {
-                <a asp-action="Edit" asp-route-id="@item.bID" title="Click Here To Take Book Out Of Circulation" >In Use</a>
-            }
-            else
-            {
-                <a asp-action="Edit" asp-route-id="@item.bID" title="Click Here To Put Book Into Circulation">Not In Use</a>
-            }
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.book.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.book.Author)
+                </td>
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.inUse)
+                    </td>*@
+                <td>
+                    @if (item.inUse)
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.bID" title="Click Here To Take Book Out Of Circulation">In Use</a>
+                    }
+                    else
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.bID" title="Click Here To Put Book Into Circulation">Not In Use</a>
+                    }
 
-            @*<a asp-action="Details" asp-route-id="@item.bID">Details</a> |
-        <a asp-action="Delete" asp-route-id="@item.bID">Delete</a>*@
-        </td>
-        </tr>
-}
+                    @*<a asp-action="Details" asp-route-id="@item.bID">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.bID">Delete</a>*@
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
+@section scripts
+{
+    <script src="~/js/catalogue.js">
+    </script>
+}

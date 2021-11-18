@@ -119,14 +119,28 @@ namespace DomainModel.Controllers
 
             var reservations = await _context.reservations.ToListAsync();
 
-            var filteredBooks = myBooks;
+            IEnumerable<Catalogue> filteredBooks = myBooks.Distinct();
 
-            if (!string.IsNullOrEmpty(srch))
-            {
-                filteredBooks = myBooks.Where(b => b.book.Title.ToLower().Contains(srch.ToLower()) || b.book.Author.ToLower().Contains(srch.ToLower())).ToList();
-            }
+            //if (!string.IsNullOrEmpty(srch))
+            //{
+            //    filteredBooks = myBooks.Where(b => b.book.Title.ToLower().Contains(srch.ToLower()) || b.book.Author.ToLower().Contains(srch.ToLower())).ToList();
+            //}
 
-            var fb = filteredBooks.Distinct()/*.Select(b => b.book.BookID)*/.ToList();
+            //var fb = filteredBooks.Select(b => b.book.BookID).Distinct().ToList();
+            //var fb = filteredBooks.Select(b => b.book.BookID + " " + b.book.Title + " " + b.book.Author + " " + b.book.ReserveList.Count).Distinct().ToList();
+            //var fb = filteredBooks.Select(b => new Catalogue{book = b.book, inUse = b.inUse, Owner = b.Owner, bID = b.bID,LoanList = b.LoanList}).Select(b => b.book.BookID).Distinct().ToList();
+            
+          
+
+            //List<Catalogue> filteredBooks = new List<Catalogue>();
+            //int i;
+            //foreach (Catalogue c in myBooks)
+            //{
+            //    if (filteredBooks[i].book.BookID == c.book.BookID) 
+            //    {
+
+            //    }
+            //}
 
             //14/11/21
             //CatalogueVM catalogueVM = new CatalogueVM() { Catalogue = filteredBooks, ReserveList = reservations};
@@ -134,7 +148,7 @@ namespace DomainModel.Controllers
             ViewBag.thisUser = userId;
 
             //return View(catalogueVM);
-            return View(fb);
+            return View(filteredBooks);
 
         }
         // GET: Catalogue/Details/5

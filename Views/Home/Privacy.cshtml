@@ -6,9 +6,9 @@
 <h1>@ViewData["Title"]</h1>
 
 <p>
-<a asp-action="Create">Create New Loan</a>
+    <a asp-action="Create">Create New Loan</a>
 </p>
-<table class="table">
+<table id="example" class="table table-striped table-bordered" cellspacing="0" style="width:100%">
     <thead>
         <tr>
             <th>
@@ -20,25 +20,30 @@
             <th>
                 @Html.Label("Borrower")
             </th>
-            <th></th>
         </tr>
     </thead>
     @*<tbody>
-@foreach (var item in Model) {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.book.Title)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.book.Author)
-                </td>
-     
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.bID">On Loan</a> |
-                    <a asp-action="Delete" asp-route-id="@item.bID">Delete</a>
-                </td>
-            </tr>
-}
-    </tbody>*@
+        @foreach (var item in Model) {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.book.Title)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.book.Author)
+                        </td>
+
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.bID">On Loan</a> |
+                            <a asp-action="Delete" asp-route-id="@item.bID">Delete</a>
+                        </td>
+                    </tr>
+        }
+            </tbody>*@
 </table>
 
+
+@section scripts
+{
+    <script src="~/js/catalogue.js">
+    </script>
+}

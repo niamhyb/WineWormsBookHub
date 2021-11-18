@@ -24,7 +24,7 @@ namespace DomainModel.Models
         [Display(Name = "Non Fiction")] Non_Fiction = 1,
     }
        
-    public class Catalogue
+    public class Catalogue : IEquatable<Catalogue>
     {
         [Key]
         public int bID { get; set; }
@@ -45,6 +45,28 @@ namespace DomainModel.Models
         {
             //ReserveList = new List<Reservation>();
             LoanList = new List<Loan>();
+        }
+
+        public bool Equals(Catalogue other)
+        {
+            //Check whether the compared object is null.
+            if (Object.ReferenceEquals(other, null)) return false;
+
+            //Check whether the compared object references the same data.
+            if (Object.ReferenceEquals(this, other)) return true;
+
+            //Check whether the products' properties are equal.
+            return book.BookID.Equals(other.book.BookID);
+        }
+
+        public override int GetHashCode()
+        {
+
+            //Get hash code for the Code field.
+            int hashBookID = book.BookID.GetHashCode();
+
+            //Calculate the hash code for the product.
+            return hashBookID;
         }
     }
 
