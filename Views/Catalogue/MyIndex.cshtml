@@ -19,6 +19,9 @@
                 @Html.DisplayNameFor(model => model.book.Author)
             </th>
             <th>
+                @Html.Label("Current Reader")
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.inUse)
             </th>
         </tr>
@@ -33,9 +36,10 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.book.Author)
                 </td>
-                @*<td>
-                        @Html.DisplayFor(modelItem => item.inUse)
-                    </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.LoanList.Last().borrower.FirstName)
+                    @Html.DisplayFor(modelItem => item.LoanList.Last().borrower.LastName)
+                </td>
                 <td>
                     @if (item.inUse)
                     {

@@ -1,0 +1,52 @@
+﻿@model IEnumerable<DomainModel.Models.Catalogue>
+
+@{
+    ViewData["Title"] = "Book Owners";
+}
+<h1>@ViewData["Title"]</h1>
+
+<table id="example" class="table table-striped table-bordered" cellspacing="0" style="width:100%">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.book.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.book.Author)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Owner)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.inUse)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.book.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.book.Author)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Owner.FirstName)
+                @Html.DisplayFor(modelItem => item.Owner.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.inUse)
+            </td>
+        </tr>
+        }
+            </tbody>
+</table>
+
+
+
+@section scripts
+{
+    <script src="~/js/catalogue.js">
+    </script>
+}

@@ -32,14 +32,17 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Catalogue" asp-action="MyIndex">My Books</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Catalogue" asp-action="Index">View Catalogue</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Catalogue" asp-action="Index">Catalogue</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">My Loans</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Catalogue" asp-action="currentlyReading">Currently Reading</a>
                             </li>
                         }
                         @if (User.IsInRole("Admin"))
                         {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Catalogue" asp-action="catalogueEditor">Book Owners</a>
+                            </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Book" asp-action="Index">Books</a>
                             </li>

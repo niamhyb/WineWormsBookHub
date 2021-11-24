@@ -11,6 +11,7 @@
 </form>
 
 
+
 <div>
     <h4>Book</h4>
     <hr />
@@ -31,12 +32,12 @@
             </dd>
         </dl>
     }
-    </div>
+</div>
 <div>
     @if (Model != null)
     {
         <a asp-action="AddCopy" asp-route-id="@Model.BookID">Add My Copy To Catalogue</a>
-  }
+    }
 
     <a asp-action="Index">Back to List</a>
 </div>

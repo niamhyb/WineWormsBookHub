@@ -15,6 +15,7 @@ namespace DomainModel.Models
         [Display(Name = "Drama")] Drama = 4,
         [Display(Name = "Fantasy")] Fantasy = 5,
         [Display(Name = "Horror")] Horror = 6,
+        [Display(Name = "Romance")] Romance = 9,
         [Display(Name = "SciFi")] SciFi = 7,
         [Display(Name = "Thriller")] Thriller= 8,
     }
@@ -36,7 +37,7 @@ namespace DomainModel.Models
 
         //list of members who want particular book
         //public virtual List<Reservation> ReserveList { get; set; }
-        public virtual List<Loan> LoanList { get; set; }
+        public /*virtual*/ List<Loan> LoanList { get; set; }
         //book is inuse or not
         [Display(Name = "In Use")]
         public bool inUse { get; set; } = true;
@@ -74,27 +75,30 @@ namespace DomainModel.Models
     public class Reservation
     {
         [Key]
-        public int reservationID { get; set; }
+        public int? reservationID { get; set; }
         public virtual ApplicationUser borrower { get; set; }
         public DateTime DateReserved { get; set; }
-
-        public int ReadingOrder { get; set; }
-        //public Catalogue catalogue { get; set; }
-
-        //public Book book { get; set; }
+        public int ReadingOrder { get; set; }      
+        public Loan loan { get; set; }
 
     }
 
-    ////recording when loan takes place
+    //recording when loan takes place
     public class Loan
     {
         [Key]
-        public int loanID { get; set; }
+        public int? loanID { get; set; }
+
+        [Display(Name = "Borrower")]
         public virtual ApplicationUser borrower { get; set; }
 
+        [Display(Name = "Date Loaned")]
         public DateTime DateLoaned { get; set; }
 
+        [Display(Name = "Date Returned")]
         public DateTime DateReturned { get; set; }
+
+        public Catalogue catalogue { get; set; }
     }
 
     public class CatalogueVM
@@ -103,5 +107,18 @@ namespace DomainModel.Models
         public int ID { get; set; }
         public List<Catalogue> Catalogue { get; set; }
         public List<Reservation> ReserveList { get; set; }
+    }
+
+    public class LoanVM
+    {
+        [Key]
+        public int ID { get; set; }
+        public Loan loan { get; set; }
+
+        public Reservation reservation { get; set; }
+
+        [Display(Name = "Next Borrower")]
+        public ApplicationUser nextBorrower { get; set; }
+
     }
 }
