@@ -42,27 +42,14 @@ namespace DomainModel.Controllers
 
             ApplicationUser bor = await _context.ApplicationUsers.FirstOrDefaultAsync(p => p.Email.Contains("mur"));
 
-            //Book newbook = new Book() { BookID = 0, Title = "Treasure Island", Author = "R.L. Stevenson", ISBN = "2234567891235", AvgRating = 5, Genres = Genre.Adventure };
-            //await _context.BookTable.AddAsync(newbook);
-
             Book newbook = new Book() { BookID = 0, Title = "Braywatch", Author = "Ross O'Carroll-Kelly", ISBN = "1234567895643", AvgRating = 4, Genres = Genre.Comedy};
             await _context.BookTable.AddAsync(newbook);
-
-            //Reservation r = new Reservation() { borrower = bor, DateReserved = DateTime.Now, ReadingOrder = 1, reservationID = 0 };
-            //await _context.reservations.AddAsync(r);
-
-            //Loan l = new Loan() { borrower = bor, DateLoaned = DateTime.Now, DateReturned = DateTime.Now, loanID = 0 };
-            //await _context.loans.AddAsync(l);
 
             Catalogue cat = new Catalogue();
             cat.book = newbook;
             cat.Owner = bor;
-            //cat.ReserveList.Add(r);
-            //cat.LoanList.Add(l);
             await _context.catalogues.AddAsync(cat);
 
-            //person.books.Add(
-            //    new Book() {Title="Treasure Island", Author="R.L. Stevenson", ISBN = "1234567891234" });
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
@@ -70,7 +57,6 @@ namespace DomainModel.Controllers
         public async Task<IActionResult> addTest()
         {
             Test mytest = new Test() { TestID = 0, FName = "Work!" };
-            //await _context.tests.AddAsync(mytest);
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));

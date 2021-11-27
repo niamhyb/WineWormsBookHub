@@ -21,11 +21,6 @@ namespace DomainModel.Models
         public string LastName { get; set; }
         [PersonalData]
         public DateTime BirthDate { get; set; }
-        //public List<Book> books { get; set; }
-        //public ApplicationUser()
-        //{
-        //    //books = new List<Book>();
-        //}
     }
 
     public class Administrator : ApplicationUser

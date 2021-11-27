@@ -11,6 +11,10 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore;
+using System.IO;
+using MimeKit;
+using Microsoft.AspNetCore.Hosting;
 
 namespace DomainModel.Controllers
 {
@@ -20,13 +24,15 @@ namespace DomainModel.Controllers
         private readonly DomainModelContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailSender _emailSender;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public CatalogueController(DomainModelContext context, UserManager<ApplicationUser> userManager, ILogger<CatalogueController> logger, IEmailSender emailSender)
+        public CatalogueController(DomainModelContext context, UserManager<ApplicationUser> userManager, ILogger<CatalogueController> logger, IEmailSender emailSender, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
             _userManager = userManager;
             _logger = logger;
             _emailSender = emailSender;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         // GET: Catalogue
@@ -54,8 +60,6 @@ namespace DomainModel.Controllers
             var userId = _userManager.GetUserId(HttpContext.User);
             ApplicationUser person = await _context.ApplicationUsers.FirstOrDefaultAsync(p => p.Id == userId);
 
-            //Catalogue c = await _context.catalogues.FirstOrDefaultAsync(p => p.bID == id);
-            //List<Reservation> ReserveList = new List<Reservation>();
             var ReserveList = await _context.reservations.ToListAsync();
             Book b = await _context.BookTable.FirstOrDefaultAsync(p => p.BookID == id);
 
@@ -63,8 +67,6 @@ namespace DomainModel.Controllers
             reservation.borrower = person;
             reservation.DateReserved = DateTime.Now;
             reservation.ReadingOrder = 1;
-            //reservation.book = b;
-            //ReserveList.Add(reservation);
             b.ReserveList.Add(reservation);
             
 
@@ -72,7 +74,6 @@ namespace DomainModel.Controllers
 
             ViewBag.thisUser = userId;
 
-            //return View();
             return RedirectToAction("Index");
 
         }
@@ -209,7 +210,6 @@ namespace DomainModel.Controllers
                 return NotFound();
             }
           
-            //Catalogue c = await _context.catalogues.FirstOrDefaultAsync(p => p.bID == id);
             if (catalogue.inUse == true)
             {
                 catalogue.inUse = false;
@@ -223,7 +223,6 @@ namespace DomainModel.Controllers
             await _context.SaveChangesAsync();
 
             return RedirectToAction("MyIndex");
-            //return View(catalogue);
         }
 
         // POST: Catalogue/Edit/5
@@ -299,8 +298,6 @@ namespace DomainModel.Controllers
 
             catalogue.LoanList.Add(newLoan);
 
-            //await _context.loans.AddAsync(newLoan);
-
             await _context.SaveChangesAsync();
 
             return RedirectToAction("MyIndex");
@@ -357,18 +354,45 @@ namespace DomainModel.Controllers
             return View(newLoans);
         }
 
-        public async Task<IActionResult> SendReminder(int? id, string userID)
+        public async Task<IActionResult> SendNewsletter()
         {
-            var book = await _context.BookTable.FirstOrDefaultAsync(b => b.BookID == id);
+            List<ApplicationUser> members = await _context.ApplicationUsers.ToListAsync();
 
-            var user = await _context.ApplicationUsers.FirstOrDefaultAsync(u => u.Id == userID);
+            //string emails = members.Select(m => m.Email).ToArray();
+            string emails = string.Join(";", members.Select(m => m.Email).ToArray());
 
-            string email = user.Email;
-            string subject = "Wine Worms Reminder - To return " + book.Title;
-            string message = "Please pass on " + book.Title;
+            //string email = user.Email;
+            string subject = "Wine Worms Newsletter " + DateTime.Now.ToLongDateString();
+            string message = "Please log in and check to see if anyone has reserved a book you are currently reading";
 
-            await _emailSender.SendEmailAsync(email, subject, message);
-            
+
+            //Get email template located in folder wwwroot/Templates/
+            var webRoot = _webHostEnvironment.WebRootPath;
+
+            var pathToFile = webRoot
+                    + Path.DirectorySeparatorChar.ToString()
+                    + "Templates"
+                    + Path.DirectorySeparatorChar.ToString()
+                    + "newsletter.html";
+
+            var builder = new BodyBuilder();
+
+            using (StreamReader SourceReader = System.IO.File.OpenText(pathToFile))
+            {
+                builder.HtmlBody = SourceReader.ReadToEnd();
+            }
+
+
+            string messageBody = string.Format(builder.HtmlBody,
+                                      "zero",
+                                      DateTime.Now.ToString("MMMM"),
+                                      "Two",
+                                      DateTime.Now.ToLongDateString()
+                                      );
+
+            await _emailSender.SendEmailAsync(emails, subject, messageBody.ToString());
+
+
             return RedirectToAction("MyIndex");
         }
 
@@ -379,11 +403,6 @@ namespace DomainModel.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Lend(Catalogue catalogue, Member member)
         {
-            //if (id != catalogue.bID)
-            //{
-            //    return NotFound();
-            //}
-
             if (ModelState.IsValid)
             {
                 try
@@ -407,29 +426,6 @@ namespace DomainModel.Controllers
             return View(catalogue);
         }
 
-        // GET: CatalogueController/Edit/7
-        //public ActionResult Editbook(int? id)
-        //{
-        //    return View();
-        //}
-
-        //// POST: CatalogueController/EditBook
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> EditBook(int id, [Bind("bID,inUse")] Catalogue catalogue)
-        //{
-        //    try
-        //    {
-        //        await _context.SaveChangesAsync();
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    catch
-        //    {
-        //        return View();
-        //    }
-        //}
-
-        // GET: Catalogue/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)

@@ -32,12 +32,11 @@ namespace DomainModel.Models
         //bID is the Catalogue ID
 
         //not the book/owner details, a reference to them
-        public /*virtual*/ Book book { get; set; }
-        public /*virtual*/ ApplicationUser Owner { get; set; }
+        public Book book { get; set; }
+        public ApplicationUser Owner { get; set; }
 
         //list of members who want particular book
-        //public virtual List<Reservation> ReserveList { get; set; }
-        public /*virtual*/ List<Loan> LoanList { get; set; }
+        public List<Loan> LoanList { get; set; }
         //book is inuse or not
         [Display(Name = "In Use")]
         public bool inUse { get; set; } = true;
