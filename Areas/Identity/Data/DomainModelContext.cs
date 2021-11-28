@@ -24,7 +24,7 @@ namespace DomainModel.Data
 
         public DbSet<Reservation> reservations { get; set; }
         public DbSet<Loan> loans { get; set; }
-        //public DbSet<Test> tests { get; set; }
+        public DbSet<Newsletter> newsletters { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -37,6 +37,8 @@ namespace DomainModel.Data
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
         }
+
+        public DbSet<DomainModel.Models.Newsletter> Newsletter { get; set; }
 
 
     }

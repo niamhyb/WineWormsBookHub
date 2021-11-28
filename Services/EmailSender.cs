@@ -32,8 +32,16 @@ namespace DomainModel.Services
                 Subject = subject,
                 PlainTextContent = message,
                 HtmlContent = message
+                
             };
-            msg.AddTo(new EmailAddress(email));
+            //msg.AddTo(new EmailAddress(email));
+            //msg.AddTo(new EmailAddress("niamh_brady@icloud.com"));
+            var emls = email.Split(';');
+            foreach (string eml in emls)
+            {
+                msg.AddTo(new EmailAddress(eml));
+            }
+
 
             // Disable click tracking.
             // See https://sendgrid.com/docs/User_Guide/Settings/tracking.html

@@ -7,13 +7,12 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap4.min.css" />
-    @*<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css" />*@
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Wine Worms</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><strong>Wine Worms</strong></a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -21,27 +20,30 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            @*<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>*@
+                            <a class="nav-link text-info" asp-area="" asp-controller="Home" asp-action="Index"><strong>Home</strong></a>
                         </li>
                         @if (User.IsInRole("Member"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Catalogue" asp-action="MyIndex">My Books</a>
+                                <a class="nav-link text-info" asp-area="" asp-controller="Catalogue" asp-action="MyIndex"><strong>My Books</strong></a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Catalogue" asp-action="Index">View Catalogue</a>
+                                <a class="nav-link text-info" asp-area="" asp-controller="Catalogue" asp-action="Index"><strong>Catalogue</strong></a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">My Loans</a>
+                                <a class="nav-link text-info" asp-area="" asp-controller="Catalogue" asp-action="currentlyReading"><strong>Currently Reading</strong></a>
                             </li>
                         }
                         @if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Book" asp-action="Index">Books</a>
+                                <a class="nav-link text-info" asp-area="" asp-controller="Catalogue" asp-action="catalogueEditor"><strong>Book Owners</strong></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-info" asp-area="" asp-controller="Book" asp-action="Index"><strong>Books</strong></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-info" asp-area="" asp-controller="Catalogue" asp-action="SendNewsletter"><strong>Newsletter</strong></a>
                             </li>
                         }
 
@@ -60,14 +62,14 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="border-top footer bg-white text-muted">
         <div class="container">
             &copy; 2021 - Wine Worms Book Hub - <img src="images/facebook.jpg" alt="facebook logo" /> <a href="https://www.facebook.com/WineWorms" target="_blank">Facebook Page</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/catalogue.js" asp-append-version="true"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap4.min.js"></script>

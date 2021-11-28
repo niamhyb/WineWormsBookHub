@@ -1,14 +1,10 @@
 ﻿@model IEnumerable<DomainModel.Models.Catalogue>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Book Owners";
 }
+<h1>@ViewData["Title"]</h1>
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="GetBookByISBN">Add a Book</a>
-</p>
 <table id="example" class="table table-hover table-bordered" cellspacing="0" style="width:100%">
     <thead>
         <tr>
@@ -19,7 +15,7 @@
                 @Html.DisplayNameFor(model => model.book.Author)
             </th>
             <th>
-                @Html.Label("Current Reader")
+                @Html.DisplayNameFor(model => model.Owner)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.inUse)
@@ -37,26 +33,18 @@
                     @Html.DisplayFor(modelItem => item.book.Author)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.LoanList.Last().borrower.FirstName)
-                    @Html.DisplayFor(modelItem => item.LoanList.Last().borrower.LastName)
+                    @Html.DisplayFor(modelItem => item.Owner.FirstName)
+                    @Html.DisplayFor(modelItem => item.Owner.LastName)
                 </td>
                 <td>
-                    @if (item.inUse)
-                    {
-                        <a asp-action="Edit" asp-route-id="@item.bID" title="Click Here To Take Book Out Of Circulation">In Use</a>
-                    }
-                    else
-                    {
-                        <a asp-action="Edit" asp-route-id="@item.bID" title="Click Here To Put Book Into Circulation">Not In Use</a>
-                    }
-
-                    @*<a asp-action="Details" asp-route-id="@item.bID">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.bID">Delete</a>*@
+                    @Html.DisplayFor(modelItem => item.inUse)
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+
 
 @section scripts
 {
@@ -64,8 +52,8 @@
     </script>
 }
 
-<style>  
-    body {  
-        background-image:url("/Images/wwa.png") ;  
-    }  
+<style>
+    body {
+        background-image: url("/Images/wwa.png");
+    }
 </style>  

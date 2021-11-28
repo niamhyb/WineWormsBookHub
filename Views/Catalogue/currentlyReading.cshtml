@@ -1,0 +1,69 @@
+﻿@model IEnumerable<DomainModel.Models.LoanVM>
+
+@{
+    ViewData["Title"] = "currentlyReading";
+}
+
+<h1>Currently Reading</h1>
+
+<table id="example" class="table table-hover table-bordered" cellspacing="0" style="width:100%">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.loan.catalogue.book.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.loan.catalogue.book.Author)
+            </th>
+            <th>
+                @Html.Label("Owner")
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.loan.DateLoaned)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.nextBorrower)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.loan.catalogue.book.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.loan.catalogue.book.Author)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.loan.catalogue.Owner.FirstName)
+                    @Html.DisplayFor(modelItem => item.loan.catalogue.Owner.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.loan.DateLoaned)
+                </td>
+                <td>
+                    @if (@item.reservation != null)
+                    {
+                        <a asp-action="HandOver" asp-route-id="@item.reservation.reservationID" title="Click Here To Confirm That You Have Passed Book To Next Borrower" asp-route-currentLoan="@item.loan.loanID">
+                            @Html.DisplayFor(modelItem => item.nextBorrower.FirstName)
+                            @Html.DisplayFor(modelItem => item.nextBorrower.LastName)
+                        </a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section scripts
+{
+    <script src="~/js/catalogue.js">
+    </script>
+}
+<style>
+    body {
+        background-image: url("/Images/wwa.png");
+    }
+</style>  

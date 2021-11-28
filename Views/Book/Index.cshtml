@@ -6,10 +6,7 @@
 
 <h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
+<table id="example" class="table table-hover table-bordered" cellspacing="0" style="width:100%">
     <thead>
         <tr>
             <th>
@@ -31,29 +28,41 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ISBN)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Author)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Genres)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AvgRating)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.BookID">Edit</a> 
-                @*<a asp-action="Details" asp-route-id="@item.BookID">Details</a> |*@
-                @*<a asp-action="Delete" asp-route-id="@item.BookID">Delete</a>*@
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ISBN)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Author)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Genres)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AvgRating)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.BookID">Edit</a>
+                    @*<a asp-action="Details" asp-route-id="@item.BookID">Details</a> |*@
+                    @*<a asp-action="Delete" asp-route-id="@item.BookID">Delete</a>*@
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
+@section scripts
+{
+    <script src="~/js/catalogue.js">
+    </script>
+}
+<style>
+    body {
+        background-image: url("/Images/wwa.png");
+    }
+</style>  

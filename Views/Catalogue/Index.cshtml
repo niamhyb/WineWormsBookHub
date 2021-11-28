@@ -1,132 +1,87 @@
 ﻿@model IEnumerable<DomainModel.Models.Catalogue>
-@*@model DomainModel.Models.CatalogueVM*@
-
-@*@model IEnumerable<DomainModel.Models.Book>*@
-
 
 @{
     ViewData["Title"] = "Index";
 }
 
+@section scripts
+{
+    <script src="~/js/catalogue.js">
+    </script>
+}
+
 <h1>All Books in Catalogue</h1>
 @*@ViewBag.thisUser*@
 
-<form asp-controller="Catalogue" asp-action="Index" asp-route-srch="@ViewBag.searchtext" asp-route-sta="@ViewBag.sta">
-    <p>
-        Search by Title or Author <br /><input type="text" name="srch" value="@ViewBag.searchtext" />
-        <input type="submit" value="Filter" />
-    </p>
-</form>
+@*<form asp-controller="Catalogue" asp-action="Index" asp-route-srch="@ViewBag.searchtext" asp-route-sta="@ViewBag.sta">
+        <p>
+            Search by Title or Author <br /><input type="text" name="srch" value="@ViewBag.searchtext" />
+            <input type="submit" value="Filter" />
+        </p>
+    </form>*@
 <p></p>
 @ViewBag.message
 <p></p>
 
-@*<p>
-        <a asp-action="Create">Create New</a>
-    </p>*@
 
-<table id="example" class="table table-striped table-bordered" style="width:100%">
-        <thead>
+<table id="example" class="table table-hover table-bordered" cellspacing="0" style="width:100%">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.book.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.book.Author)
+            </th>
+            <th>
+                @Html.Label("Reserve Status")
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
             <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.book.Title)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.book.Author)
-                </th>
-                <th>
-                    @Html.Label("Owner")
-                </th>
-                @*<th>
-                        @Html.Label("Reservation Status")
-                    </th>*@
-                <th></th>
+                <td>
+                    @Html.DisplayFor(modelItem => item.book.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.book.Author)
+                </td>
+                <td>
+
+                    @{
+                        bool found = false;
+                    }
+
+
+                    @foreach (Reservation r in item.book.ReserveList)
+                    {
+
+                        if (r.borrower.Id == ViewBag.thisUser)
+                        {
+                            found = true;
+
+                        }
+                    }
+
+                    @if (found)
+
+                    {
+                        @Html.Label("Reserved")
+                    }
+                    else
+                    {
+                        <a asp-action="Reserve" asp-route-id="@item.book.BookID">Reserve</a>
+                    }
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.book.Title)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.book.Author)
-                    </td>
-                    @*<td>
-                            @Html.DisplayFor(modelItem => item.FirstName)
-
-                            @Html.DisplayFor(modelItem => item.LastName)
-                        </td>*@
-                    @*<td>
-                            @Html.DisplayFor(modelItem => item.inUse)
-                        </td>*@
-                    <td>
-                        @*@if (item.Owner.Id != ViewBag.thisUser)
-                            {*@
-
-                        @{
-                            bool found = false;
-                        }
-
-                        @*@item.ReserveList.Count*@
-
-                        @foreach (Reservation r in item.book.ReserveList)
-                        {
-
-                            if (r.borrower.Id == ViewBag.thisUser)
-                            {
-                                found = true;
-
-                            }
-                        }
-
-                        @if (found)
-
-                        {
-                            @*<a asp-action="Unreserve" asp-route-id="@item.bID">Unreserve</a>*@
-                            @Html.Label("Reserved")
-                        }
-                        else
-                        {
-                            <a asp-action="Reserve" asp-route-id="@item.book.BookID">Reserve</a>
-                        }
-                        @*<a asp-action="Edit" asp-route-id="@item.bID">Reserve/Unreserve</a>*@
-                        @*}*@
-
-                        @*| <a asp-action="Edit" asp-route-id="@item.bID">Edit Book Details</a>*@
-
-                        @*<a asp-action="Details" asp-route-id="@item.bID">Details</a> |
-                            <a asp-action="Delete" asp-route-id="@item.bID">Delete</a> |*@
-                    </td>
-                </tr>
-            }
-        </tbody>
+        }
+    </tbody>
 </table>
 
-        @*<nav aria-label="...">
-                <ul class="pagination">
-                    <li class="page-item disabled">
-                        <span class="page-link">Previous</span>
-                    </li>
-                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item active">
-                        <span class="page-link">
-                            2
-                            <span class="sr-only">(current)</span>
-                        </span>
-                    </li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item">
-                        <a class="page-link" href="#">Next</a>
-                    </li>
-                </ul>
-            </nav>*@
-
-        @section scripts
-{
-            <script 
-                    src="~/js/catalogue.js">
-            </script>
-}
-      
+<style>
+    body {
+        background-image: url("/Images/wwa.png");
+    }
+</style>

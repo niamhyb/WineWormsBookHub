@@ -5,7 +5,12 @@ VisualStudioVersion = 16.0.31105.61
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DomainModel", "DomainModel.csproj", "{A3D8D4AF-7977-4226-868C-EB1998CFA71D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WineWormsUnitTesting", "..\WineWormsUnitTesting\WineWormsUnitTesting.csproj", "{E3902F00-DA93-4C27-A0A8-10BF353E5436}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WineWormsUnitTesting", "..\WineWormsUnitTesting\WineWormsUnitTesting.csproj", "{E3902F00-DA93-4C27-A0A8-10BF353E5436}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C8B340EB-752A-48E6-B898-074F942E10BD}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
