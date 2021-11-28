@@ -2,7 +2,7 @@
 
 namespace DomainModel.Migrations
 {
-    public partial class bookinreservation : Migration
+    public partial class newsletter2 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

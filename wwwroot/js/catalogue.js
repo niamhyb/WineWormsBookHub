@@ -13,4 +13,6 @@ $(document).ready(function () {
         "ordering": true    
     });
     $('.dataTables_length').addClass('bs-select');
+
 });
+

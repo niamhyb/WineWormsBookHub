@@ -41,9 +41,10 @@ namespace DomainModel.Models
         [Display(Name = "In Use")]
         public bool inUse { get; set; } = true;
 
+        public DateTime DateAdded { get; set; } = DateTime.Now;
+
         public Catalogue()
         {
-            //ReserveList = new List<Reservation>();
             LoanList = new List<Loan>();
         }
 
@@ -120,4 +121,5 @@ namespace DomainModel.Models
         public ApplicationUser nextBorrower { get; set; }
 
     }
+
 }

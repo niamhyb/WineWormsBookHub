@@ -354,17 +354,25 @@ namespace DomainModel.Controllers
             return View(newLoans);
         }
 
+        //GET
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> SendNewsletter()
         {
+            return View();
+        }
+
+        // POST: Catalogue/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SendNewsletter(Newsletter newsletter)
+        {
+            string subject = "Wine Worms Newsletter " + DateTime.Now.ToLongDateString();
             List<ApplicationUser> members = await _context.ApplicationUsers.ToListAsync();
 
-            //string emails = members.Select(m => m.Email).ToArray();
             string emails = string.Join(";", members.Select(m => m.Email).ToArray());
-
-            //string email = user.Email;
-            string subject = "Wine Worms Newsletter " + DateTime.Now.ToLongDateString();
-            string message = "Please log in and check to see if anyone has reserved a book you are currently reading";
-
 
             //Get email template located in folder wwwroot/Templates/
             var webRoot = _webHostEnvironment.WebRootPath;
@@ -382,18 +390,40 @@ namespace DomainModel.Controllers
                 builder.HtmlBody = SourceReader.ReadToEnd();
             }
 
+            string newmembers = null;
+
+            if (!string.IsNullOrEmpty(newsletter.NewMembers))
+            {
+                newmembers = "<h4> Welcome to our new members: " + newsletter.NewMembers + "</h4>";
+                   
+            }
 
             string messageBody = string.Format(builder.HtmlBody,
-                                      "zero",
+                                      newsletter.NextMeetingLocation,
                                       DateTime.Now.ToString("MMMM"),
-                                      "Two",
-                                      DateTime.Now.ToLongDateString()
+                                      newmembers,
+                                      newsletter.NextMeetingDate.ToLongDateString(),
+                                      newsletter.BookOfTheMonthTitle,
+                                      newsletter.BookOfTheMonthImage,
+                                      newsletter.BookOfTheMonthAuthor,
+                                      newsletter.BookOfTheMonthBlurb,
+                                      newsletter.NextMeetingDate.ToShortTimeString()
                                       );
 
             await _emailSender.SendEmailAsync(emails, subject, messageBody.ToString());
 
+            await _context.newsletters.AddAsync(newsletter);
+            await _context.SaveChangesAsync();
 
-            return RedirectToAction("MyIndex");
+            return RedirectToAction("MessageSent");
+
+        }
+
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> MessageSent()
+        {
+
+            return View();
         }
 
         // POST: Catalogue/Lend/5

@@ -21,6 +21,7 @@ namespace DomainModel.Models
         public string LastName { get; set; }
         [PersonalData]
         public DateTime BirthDate { get; set; }
+        public DateTime JoinDate { get; set; }
     }
 
     public class Administrator : ApplicationUser

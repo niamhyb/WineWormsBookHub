@@ -29,30 +29,30 @@
     <tbody>
         @foreach (var item in Model)
         {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.loan.catalogue.book.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.loan.catalogue.book.Author)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.loan.catalogue.Owner.FirstName)
-                @Html.DisplayFor(modelItem => item.loan.catalogue.Owner.LastName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.loan.DateLoaned)
-            </td>
-            <td>
-            @if (@item.reservation != null) 
-            {
-                <a asp-action="HandOver" asp-route-id="@item.reservation.reservationID" title="Click Here To Confirm That You Have Passed Book To Next Borrower" asp-route-currentLoan="@item.loan.loanID">
-                    @Html.DisplayFor(modelItem => item.nextBorrower.FirstName)
-                    @Html.DisplayFor(modelItem => item.nextBorrower.LastName)
-                </a>
-                }
-            </td>
-        </tr>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.loan.catalogue.book.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.loan.catalogue.book.Author)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.loan.catalogue.Owner.FirstName)
+                    @Html.DisplayFor(modelItem => item.loan.catalogue.Owner.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.loan.DateLoaned)
+                </td>
+                <td>
+                    @if (@item.reservation != null)
+                    {
+                        <a asp-action="HandOver" asp-route-id="@item.reservation.reservationID" title="Click Here To Confirm That You Have Passed Book To Next Borrower" asp-route-currentLoan="@item.loan.loanID">
+                            @Html.DisplayFor(modelItem => item.nextBorrower.FirstName)
+                            @Html.DisplayFor(modelItem => item.nextBorrower.LastName)
+                        </a>
+                    }
+                </td>
+            </tr>
         }
     </tbody>
 </table>
@@ -62,3 +62,8 @@
     <script src="~/js/catalogue.js">
     </script>
 }
+<style>
+    body {
+        background-image: url("/Images/wwa.png");
+    }
+</style>  

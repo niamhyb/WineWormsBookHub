@@ -14,11 +14,11 @@
 @*@ViewBag.thisUser*@
 
 @*<form asp-controller="Catalogue" asp-action="Index" asp-route-srch="@ViewBag.searchtext" asp-route-sta="@ViewBag.sta">
-    <p>
-        Search by Title or Author <br /><input type="text" name="srch" value="@ViewBag.searchtext" />
-        <input type="submit" value="Filter" />
-    </p>
-</form>*@
+        <p>
+            Search by Title or Author <br /><input type="text" name="srch" value="@ViewBag.searchtext" />
+            <input type="submit" value="Filter" />
+        </p>
+    </form>*@
 <p></p>
 @ViewBag.message
 <p></p>
@@ -80,4 +80,8 @@
     </tbody>
 </table>
 
-
+<style>
+    body {
+        background-image: url("/Images/wwa.png");
+    }
+</style>

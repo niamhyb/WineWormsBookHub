@@ -44,6 +44,9 @@ namespace DomainModel.Migrations
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("JoinDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
@@ -131,6 +134,9 @@ namespace DomainModel.Migrations
                     b.Property<int?>("BookID")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("DateAdded")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("OwnerId")
                         .HasColumnType("nvarchar(450)");
 
@@ -148,7 +154,7 @@ namespace DomainModel.Migrations
 
             modelBuilder.Entity("DomainModel.Models.Loan", b =>
                 {
-                    b.Property<int>("loanID")
+                    b.Property<int?>("loanID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -174,9 +180,57 @@ namespace DomainModel.Migrations
                     b.ToTable("loans");
                 });
 
+            modelBuilder.Entity("DomainModel.Models.Newsletter", b =>
+                {
+                    b.Property<int>("newsletterID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("BookOfTheMonthAuthor")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BookOfTheMonthBlurb")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BookOfTheMonthImage")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BookOfTheMonthTitle")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NewBooks")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NewMembers")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("NextMeetingDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("NextMeetingLocation")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Salutation")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Subject")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("dateTime")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("newsletterID");
+
+                    b.ToTable("Newsletter");
+                });
+
             modelBuilder.Entity("DomainModel.Models.Reservation", b =>
                 {
-                    b.Property<int>("reservationID")
+                    b.Property<int?>("reservationID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);

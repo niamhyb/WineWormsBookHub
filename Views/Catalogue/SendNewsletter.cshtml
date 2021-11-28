@@ -1,0 +1,84 @@
+﻿@model DomainModel.Models.Newsletter
+
+@{
+    ViewData["Title"] = "SendNewsletter";
+}
+
+<h1>Newsletter</h1>
+
+<h4>Template</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="SendNewsletter">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="newsletterID" />
+            <div class="form-group">
+                <label asp-for="Subject" class="control-label"></label>
+                <input asp-for="Subject" class="form-control" />
+                <span asp-validation-for="Subject" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Salutation" class="control-label"></label>
+                <input asp-for="Salutation" class="form-control" />
+                <span asp-validation-for="Salutation" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Message" class="control-label"></label>
+                <textarea asp-for="Message" cols="40" rows="8"></textarea>
+                <span asp-validation-for="Message" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NewMembers" class="control-label"></label>
+                <input asp-for="NewMembers" class="form-control" />
+                <span asp-validation-for="NewMembers" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BookOfTheMonthTitle" class="control-label"></label>
+                <input asp-for="BookOfTheMonthTitle" class="form-control" />
+                <span asp-validation-for="BookOfTheMonthTitle" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BookOfTheMonthAuthor" class="control-label"></label>
+                <input asp-for="BookOfTheMonthAuthor" class="form-control" />
+                <span asp-validation-for="BookOfTheMonthAuthor" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BookOfTheMonthBlurb" class="control-label"></label>
+                <textarea asp-for="BookOfTheMonthBlurb" cols="40" rows="8"></textarea>
+                <span asp-validation-for="BookOfTheMonthBlurb" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BookOfTheMonthImage" class="control-label"></label>
+                <input asp-for="BookOfTheMonthImage" class="form-control" />
+                <span asp-validation-for="BookOfTheMonthImage" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NextMeetingLocation" class="control-label"></label>
+                <input asp-for="NextMeetingLocation" class="form-control" />
+                <span asp-validation-for="NextMeetingLocation" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NextMeetingDate" class="control-label"></label>
+                <input asp-for="NextMeetingDate" class="form-control" />
+                <span asp-validation-for="NextMeetingDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Send" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+<style>
+    body {
+        background-image: url("/Images/wwa.png");
+    }
+</style>  
