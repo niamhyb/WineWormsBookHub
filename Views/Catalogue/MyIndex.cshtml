@@ -9,6 +9,7 @@
 <p>
     <a asp-action="GetBookByISBN">Add a Book</a>
 </p>
+
 <table id="example" class="table table-hover table-bordered" cellspacing="0" style="width:100%">
     <thead>
         <tr>
@@ -49,9 +50,6 @@
                     {
                         <a asp-action="Edit" asp-route-id="@item.bID" title="Click Here To Put Book Into Circulation">Not In Use</a>
                     }
-
-                    @*<a asp-action="Details" asp-route-id="@item.bID">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.bID">Delete</a>*@
                 </td>
             </tr>
         }
@@ -64,8 +62,8 @@
     </script>
 }
 
-<style>  
-    body {  
-        background-image:url("/Images/wwa.png") ;  
-    }  
-</style>  
+<style>
+    body {
+        background-image: url("/Images/wwa.png");
+    }
+</style>
