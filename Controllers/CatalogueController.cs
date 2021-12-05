@@ -407,7 +407,9 @@ namespace DomainModel.Controllers
                                       newsletter.BookOfTheMonthImage,
                                       newsletter.BookOfTheMonthAuthor,
                                       newsletter.BookOfTheMonthBlurb,
-                                      newsletter.NextMeetingDate.ToShortTimeString()
+                                      newsletter.NextMeetingDate.ToShortTimeString(),
+                                      newsletter.Subject,
+                                      newsletter.Salutation
                                       );
 
             await _emailSender.SendEmailAsync(emails, subject, messageBody.ToString());
